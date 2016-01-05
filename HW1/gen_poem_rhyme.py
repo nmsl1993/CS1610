@@ -6,6 +6,18 @@ import scipy.stats as stats
 import nltk
 import random
 
+#This function adapted from #https://kashthealien.wordpress.com/2013/06/15/213/ and NLTK
+library documentation
+
+entries = nltk.corpus.cmudict.entries()
+def rhyme(inp):
+    syllables = [(word, syl) for word, syl in entries if word == inp]
+    rhymes = []
+    for (word, syllable) in syllables:
+        rhymes += [word for word, pron in entries if pron[-1:] == syllable[-1:]]
+    return set(rhymes)
+
+
 def choose_outcome(cdf_dict):
     print(cdf_dict)
     #Choose the outcome of a random event given all the possible outcomes as keys
@@ -81,12 +93,17 @@ stanza_every_n_lines = random.randint(3,5)
 print(number_of_lines)
 
 poem_lines = []
+last_words = []
 for x in range(0,number_of_lines):
     punctuation = choose_outcome(prob_of_end_line_punctuation)
     line = create_line() 
+    last_words = line.split(' ')[-1::]
     poem_lines.append(line + punctuation + '\n')
     if x % stanza_every_n_lines == stanza_every_n_lines - 1: 
         poem_lines.append("\n");
 
+rhyme_words = list(last_words)
+for i, word in enumerate(last_words)
+   rhyme_words  
 print(''.join(poem_lines))
 
