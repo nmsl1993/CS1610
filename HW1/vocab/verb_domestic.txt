@@ -3,3 +3,8 @@ eat
 scraped
 bore
 died
+cooked
+cried
+held
+yells
+hits

@@ -5,3 +5,6 @@ livingest
 toothed
 black
 puny
+moldy
+wrapped
+boiling

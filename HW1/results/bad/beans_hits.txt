@@ -1,0 +1,192 @@
+17
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'adverb': 0.1, 'verb': 0.9}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'adverb': 0.1, 'verb': 0.9}
+{'domestic': 0.3, 'other': 0.7}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'adverb': 0.1, 'verb': 0.9}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'adverb': 0.1, 'verb': 0.9}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'adverb': 0.1, 'verb': 0.9}
+{'domestic': 0.3, 'other': 0.7}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'adverb': 0.1, 'verb': 0.9}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.4, 'domestic': 0.3, 'other': 0.3}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'adverb': 0.1, 'verb': 0.9}
+{'adverb': 0.1, 'verb': 0.9}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'adverb': 0.1, 'verb': 0.9}
+{'domestic': 0.3, 'other': 0.7}
+{'': 0.55, '-': 0.08, '.': 0.3, ',': 0.07}
+{'noun': 0.7, 'adj': 0.3}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+{'adverb': 0.3, 'verb': 0.7}
+{'domestic': 0.3, 'other': 0.7}
+{'noun': 0.5, 'adj': 0.5}
+{'nature': 0.2, 'domestic': 0.5, 'other': 0.3}
+ dissonant young glimmering fall,
+ beans hits
+ death strike kitchenette.
+
+ land yells chicks
+ happiness thin beans unwillingly lean rough lovers.
+ Papa almost yells
+
+ boiling winter
+ things unwillingly cooked bold summer sing
+ thin hot life left
+
+ young young dolls died brown creaking dangerous pair.
+ woman scraped boiling college-
+ husband died dolls yells beans inside sing day jazz,
+
+ they die marbles upstairs eat,
+ every mother rather sing hot Papa left.
+ husband kinda upstairs die marbles
+
+ things jazz home rather cried.
+ life lean cloths
+

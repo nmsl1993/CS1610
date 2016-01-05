@@ -24,6 +24,7 @@ prob_of_type_given_part_of_speech = {
         'adj'  : {'nature' : .4, 'domestic' : .3, 'other' : .3},
         'verb' : {'domestic' : .3, 'other' : .7}
     }
+prob_of_end_line_punctuation = { '.' : .3, ',' : .07, '-' : .08, '' : .55}
 
 
 vocab = {
@@ -35,6 +36,7 @@ vocab = {
 with open('vocab/noun_nature.txt','r') as f: vocab['noun']['nature'] = list(filter(None,f.read().split('\n')))
 with open('vocab/noun_domestic.txt','r') as f: vocab['noun']['domestic'] = list(filter(None,f.read().split('\n')))
 with open('vocab/noun_other.txt','r') as f: vocab['noun']['other'] = list(filter(None,f.read().split('\n')))
+with open('vocab/pronouns.txt','r') as f: vocab['noun']['other'].extend(list(filter(None,f.read().split('\n'))))
 
 
 with open('vocab/adj_nature.txt','r') as f: vocab['adj']['nature'] = list(filter(None,f.read().split('\n')))
@@ -76,7 +78,8 @@ print(number_of_lines)
 
 poem_lines = []
 for x in range(0,number_of_lines):
-    poem_lines.append(create_line() + '\n')
+    punctuation = choose_outcome(prob_of_end_line_punctuation)
+    poem_lines.append(create_line() + punctuation + '\n')
     if x % stanza_every_n_lines == stanza_every_n_lines - 1: 
         poem_lines.append("\n");
 print(''.join(poem_lines))
