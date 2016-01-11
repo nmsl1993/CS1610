@@ -1,0 +1,7 @@
+Summary of Abstract:
+Uses statistics to derive human conceptual spaces of word association
+
+Tries to basically be able to do word association
+Better evaluation than previous papers, humans asked to elaborate on concepts, results compared.
+
+Targets musical creativty and poetic creativity. Finds conceptually related outputs from word inputs.
