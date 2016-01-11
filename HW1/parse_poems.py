@@ -15,8 +15,8 @@ for poem_name in poem_names:
         for line in list(filter(None,f.read().split('\n'))):
             if len(line) > 1:
                 p =  parser.parse(line)
-                print p 
+                p.pretty_print() 
                 parsed_lines[poem_name].append(p)
             else:
                 print "TYPE ERROR!"
-
+ 
