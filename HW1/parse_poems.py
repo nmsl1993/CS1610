@@ -7,6 +7,11 @@ poem_names = []
 poem_names.extend(['gb_poems/' + s for s in os.listdir("gb_poems")])
 poem_names.extend(['lh_poems/' + s for s in os.listdir("lh_poems")])
 
+#poem_names = ['gb_poems/TO_THE_DIASPORA.txt']
+parser = Parser()
+vocab = dict()
+parsed_lines = dict()
+rhymes = set()
 def list_leaf_pos(ltree):
     if len(ltree) > 1:
         l = list()
@@ -18,15 +23,13 @@ def list_leaf_pos(ltree):
                 l.extend(r)
             else:
                 raise Exception('leaf','issue')
+        print l
         return l
     elif type(ltree[0]) is nltk.tree.Tree:
             return list_leaf_pos(ltree[0])
     else:
         assert type(ltree[0]) is unicode
         return (ltree[0],ltree.label())
-parser = Parser()
-vocab = dict()
-parsed_lines = dict()
 def getLabel(t):
     if type(t) is nltk.tree.Tree:
         return t.label()
@@ -46,12 +49,13 @@ for poem_name in poem_names:
                 p =  parser.parse(line)
                 p.pretty_print() 
                 tagged = list_leaf_pos(p) 
+                if type(tagged) is tuple:
+                    tagged = [tagged]
                 for (word,pos) in tagged:
                     if pos not in vocab:
                         vocab[pos] = set([word])
                     else:
                         vocab[pos].add(word)
-                print tagged
                 parsed_lines[poem_name].append(p)
             except TypeError:
                 parsed_lines[poem_name].append(" ")
@@ -63,3 +67,6 @@ fvocab.close()
 ftrees = open('trees.pkl', 'wb')
 pickle.dump(parsed_lines,ftrees)
 ftrees.close()
+frhymes = open('rhymes.pkl','wb')
+pickle.dump(rhymes,frhymes)
+frhymes.close()
