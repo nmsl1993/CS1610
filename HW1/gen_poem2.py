@@ -92,7 +92,7 @@ while rhyme_idx < number_of_lines:
         while type(rword) is list:
             rword = rword[0]
 
-        rhyming_letter = rhyme_scheme[rhyme_idx]
+        rhyming_letter = rhyme_scheme[rhyme_idx] #postprocess in rhyming words, ignore semantic tree for this part
         if rhyming_letter not in current_rhyming:
             current_rhyming[rhyming_letter] = rword 
         else:

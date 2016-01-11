@@ -15,7 +15,7 @@
      c8 c16 c16 c8 c16 c16
      c8 ds8 e8 f8
      e8 c8 b8 g='8
-     f4 f8 r='''8
+     f4 f8 r8
     }
 >>
 \layout { }
