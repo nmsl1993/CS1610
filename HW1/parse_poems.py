@@ -2,53 +2,36 @@
 import nltk
 from stat_parser import Parser
 import os
-import pickle
+import pickle, string
+import hw1_util
+
+spunctuation = set(string.punctuation)
 poem_names = []
 poem_names.extend(['gb_poems/' + s for s in os.listdir("gb_poems")])
 poem_names.extend(['lh_poems/' + s for s in os.listdir("lh_poems")])
 
-#poem_names = ['gb_poems/TO_THE_DIASPORA.txt']
+#poem_names = ['gb_poems/Sadie_and_Maud.txt']
 parser = Parser()
 vocab = dict()
 parsed_lines = dict()
-rhymes = set()
-def list_leaf_pos(ltree):
-    if len(ltree) > 1:
-        l = list()
-        for lt in ltree:
-            r = list_leaf_pos(lt)
-            if type(r) is tuple:
-                l.append(r)
-            elif type(r) is list:
-                l.extend(r)
-            else:
-                raise Exception('leaf','issue')
-        print l
-        return l
-    elif type(ltree[0]) is nltk.tree.Tree:
-            return list_leaf_pos(ltree[0])
-    else:
-        assert type(ltree[0]) is unicode
-        return (ltree[0],ltree.label())
-def getLabel(t):
-    if type(t) is nltk.tree.Tree:
-        return t.label()
-    else:
-        return str(t)
+rhymes = dict()
 for poem_name in poem_names:
     with open(poem_name,'rb') as f: 
         parsed_lines[poem_name] = list()
+        rhyme_count = ord('A')
+        rhymes[poem_name] = list()
         print poem_name 
         for line in f.read().split('\n'):
             line = line.decode('utf-8')
             line = line.replace("'","")
             line = line.replace('"','')
+            last_word = ''
             try:
                 if line == "" or line.isspace():
                     raise TypeError
                 p =  parser.parse(line)
                 p.pretty_print() 
-                tagged = list_leaf_pos(p) 
+                tagged = hw1_util.list_leaf_pos(p) 
                 if type(tagged) is tuple:
                     tagged = [tagged]
                 for (word,pos) in tagged:
@@ -56,10 +39,25 @@ for poem_name in poem_names:
                         vocab[pos] = set([word])
                     else:
                         vocab[pos].add(word)
+                    if word not in spunctuation:
+                        last_word = word
+                if len(rhymes[poem_name]) == 0:
+                    rhymes[poem_name] = [(chr(rhyme_count), last_word)]
+                    rhyme_count += 1
+                else:
+                    for (x,wrd) in rhymes[poem_name]:
+                        if wrd is not ' ' and hw1_util.rhyme(wrd,last_word):
+                            rhymes[poem_name].append((x,last_word))
+                            break
+                    else:
+                        rhymes[poem_name].append((chr(rhyme_count),last_word))
+                        rhyme_count += 1
                 parsed_lines[poem_name].append(p)
             except TypeError:
                 parsed_lines[poem_name].append(" ")
+                #rhymes[poem_name].append((ord(' '),' '))
                 print "Blank Line!"
+            print rhymes[poem_name]
 print "DONE!"
 fvocab = open('vocab.pkl','wb')
 pickle.dump(vocab,fvocab)

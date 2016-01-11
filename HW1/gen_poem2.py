@@ -5,12 +5,17 @@ import numpy as np
 import scipy.stats as stats
 import nltk, pickle
 import random, string
+import hw1_util
 spunctuation = set(string.punctuation)
 ptypes = 0
+vocab  = 0
+rhymes = 0
 with open('ptypes.pkl','rb') as f:
     ptypes = pickle.load(f)
-with open('vocab.pkl','rb') as f:
+with open('vocab.pkl','rb')  as f:
     vocab = pickle.load(f)
+with open('rhymes.pkl','rb') as f:
+    rhymes = pickle.load(f)
 
 def normalize_pmf_dict(pmf_dict):
     sum = 0.0
@@ -45,20 +50,26 @@ def genTextFromTree(ltree):
             return out
 
 
-number_of_lines = random.randint(10,18)
-
-
+rhyme_scheme = rhymes[random.choice(rhymes.keys())] 
+number_of_lines = len(rhyme_scheme)
+current_rhyming = dict()
 initial_tree_type = random.choice(ptypes.keys())
-initial_tree_type = 'VP'
 poem_lines = []
 cur_tree_type = initial_tree_type
+rhyme_idx = 0
+print rhyme_scheme
 for x in range(0,number_of_lines):
     if not cur_tree_type.isspace():
-        #print cur_tree_type
         transition_column = normalize_pmf_dict(ptypes[cur_tree_type][1])
         cur_tree = random.choice(ptypes[cur_tree_type][0])
-        #print '\n\n'
-        #print cur_tree
+        tagged = hw1_util.list_leaf_pos(cur_tree)
+        lword = ('','')
+        for (word,pos) in tagged:
+            if word not in spunctuation:
+                lword = (word,pos)
+        if rhyme_scheme[rhyme_idx][0] not in current_rhyming
+            rhyme_scheme
+        rhyme_idx = rhyme_idx + 1
         poem_lines.append(genTextFromTree(cur_tree))
         cur_tree_type = choose_outcome(transition_column) 
     else:
