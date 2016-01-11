@@ -1,4 +1,6 @@
 import nltk
+import string
+spunctuation = set(string.punctuation)
 d = nltk.corpus.cmudict.dict()
 hack_length = 2
 def list_leaf_pos(ltree):
@@ -12,7 +14,7 @@ def list_leaf_pos(ltree):
                 l.extend(r)
             else:
                 raise Exception('leaf','issue')
-        print l
+        #print l
         return l
     elif type(ltree[0]) is nltk.tree.Tree:
             return list_leaf_pos(ltree[0])
@@ -29,15 +31,25 @@ def rhyme(w1, w2, level=1): # finds if two words rhyme
     syllables1 = 0
     syllables2 = 0
     try:
-        syllables1 = d[w1.lower()][0]
-        syllables2 = d[w2.lower()][0]
+        if type(w2) is list:
+            print 'DFA',w2
+        syllables1 = d[w1][0]
+        syllables2 = d[w2][0]
 
     except KeyError:
-        print 'KeyError!'
+        #print 'KeyError!'
         if min([len(w1),len(w2)]) < hack_length:
             return False
-        return syllables1[-hack_length::] == syllables2[-hack_length::]
+        return w1[-hack_length::] == w2[-hack_length::]
     #print syllables1, syllables2
     #print syllables1[-level::]
     return syllables1[-level::] == syllables2[-level::]
-   
+def listRhymesByPOS(word,part_of_speech=0,vocab=0):
+    out = []
+    #for v in vocab[part_of_speech]:
+    for v in d:
+        v = ''.join(c for c in v if c not in spunctuation)
+        if not v.isspace() and v not in spunctuation  and  rhyme(v,word,2):
+            out.append(v)
+    return out
+    
