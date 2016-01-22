@@ -1,47 +1,53 @@
 import processing.core.*;
-import java.awt.Frame;
-import java.awt.BorderLayout;
 import controlP5.*;
 import ddf.minim.*;
-import ddf.minim.analysis.FFT;
 import ddf.minim.ugens.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.math.*;
+
+
 
 public class Display extends PApplet { //Using Processing 2.2.1
-	int STEPS_PER_SECOND = 30;
+
+	private static final long serialVersionUID = 6732597443834822537L;
+	static final int STEPS_PER_SECOND = 30;
+	static final int TRACE_LENGTH = 1200;
+	static final float MAG_MAX = 200.0f;
+	static final int DOT_SIZE = 3;
+	
+	int sequence_start_time;
 	ControlP5 cp5;
 	Textfield digit_box;
-	Button slow_mode;
 	Minim minim;
-	AudioPlayer song;
-	Oscil wave;
-	FFT fft;
-	int nfft = 1024;
-	int curID=3;
-	float bx;
-	float by;
-	int dotSize = 3;
-	boolean isPaused = false;
+	AudioOutput out;
+	int curID;
+	int saved_curID;
 	boolean overDot;
 	boolean locked;
 	float drag_ellipseX = 0.0f;
 	float drag_ellipseY = 0.0f;
+	boolean is720p = false;
 	//ArrayList<FourierComponent> afc = new ArrayList<FourierComponent>();
 	ArrayList<Button> digit_buttons = new ArrayList<Button>();
+	ArrayList<Button> dialer_buttons = new ArrayList<Button>();
+
 	ArrayList<ArrayList<FourierComponent>> digit_fcs = new ArrayList<ArrayList<FourierComponent>>();
-	
+	//ArrayList<RingBuffer> traces = new ArrayList<RingBuffer>();
+	RingBuffer trace = new RingBuffer(TRACE_LENGTH);
 	FourierComponent draggedFc;
-	ButtonBar digit_bar;
-	Group digit_group;
+	Group digit_group,control_group,dialer_group;
 	ControlFont font;
+	
+	Button slow_button, play_button, sequence_button;
+
 	int digit_selected;
 	int black = color(0,0,0);
 	int white = color(255,255,255);
 	int green = color(0,128,0);
 	int purple = color(255,0,255);
 	int red = color(255,0,0);
+	int light_red = color(255,128,128);
+	int orange = color(255,128,0);
 	/*Traverse 64 pixels per second
 	 * Using 32 oscillators we can represent this...4
 	 * 
@@ -82,12 +88,13 @@ public class Display extends PApplet { //Using Processing 2.2.1
 		DTMF_tones.put('#',new DTMF_tone(941,1477));
 
 	}
+	private final HashMap<Integer,Oscil> ugens = new HashMap<Integer,Oscil>();
 
 	private void drawDigitButtons(int startx, int starty, String init_state)
 	{
 		fill(white);
 		textSize(32);
-		digit_group = cp5.addGroup("Phone Number").setPosition(startx, starty).setSize(300, 300);
+		digit_group = cp5.addGroup("Phone Number").setPosition(startx, starty).setSize(600, 100);
 		//digit_group.getCaptionLabel().setFont(font);
 		int id = 0;
 		for(int i = 0; i < init_state.length(); i++)
@@ -99,6 +106,7 @@ public class Display extends PApplet { //Using Processing 2.2.1
 				//b.setPosition(startx+i*50,starty);
 				b.getCaptionLabel().setFont(font);
 				b.setSize(40,60);
+
 				b.setLabel(init_state.substring(i,i+1));
 				b.setSwitch(true);
 				b.setGroup(digit_group);
@@ -123,10 +131,73 @@ public class Display extends PApplet { //Using Processing 2.2.1
 			}
 		}
 	}
-	private void drawActionsButtons(int startx, int starty, String init_state)
+	private void drawDialerButtons(int startx, int starty)
 	{
 		fill(white);
 		textSize(32);
+		dialer_group = cp5.addGroup("Dialer").setPosition(startx, starty).setSize(230, 300);
+		//digit_group.getCaptionLabel().setFont(font);
+		String s = "123456789*0#";
+		int id = 11;
+		for(int i = 0; i < s.length(); i++)
+		{
+				Button b = new Button(cp5, "d" + id);
+				b.getCaptionLabel().setFont(font);
+				b.setSize(60,60);
+
+				b.setLabel(s.substring(i,i+1));
+				b.setGroup(dialer_group);
+				b.setPosition((i%3)*70,(i/3)*80);
+				b.setId(id++);
+		}
+	}
+	private void changeCurID(int newID)
+	{
+		curID = newID;
+		//adjustMinim();
+	}
+	private void adjustMinim()
+	{
+		ArrayList<FourierComponent> afc = digit_fcs.get(curID);
+		if(play_button.getBooleanValue())
+			out.unmute();
+		else
+			out.mute();
+		for (FourierComponent fc : afc)
+		{
+			if(fc.getMag() <= 0.0f)
+				ugens.get(fc.freq).setAmplitude(0.0f);
+			else
+				ugens.get(fc.freq).setAmplitude(fc.getMag()/MAG_MAX);
+		}
+	}
+	private void drawActionsButtons(int startx, int starty)
+	{
+		fill(white);
+		textSize(32);
+		control_group = cp5.addGroup("Controls",startx,starty);
+		slow_button = new Button(cp5, "SLOW");
+		slow_button.setGroup(control_group);
+
+		slow_button.setSize(50,50);
+		slow_button.setSwitch(true);
+		slow_button.setOn();
+		slow_button.setPosition(0,0);
+		
+		play_button = new Button(cp5,"PLAY");
+		play_button.setGroup(control_group);
+		play_button.setSize(50,50);
+		play_button.setSwitch(true);
+		play_button.setOn();
+		play_button.setPosition(60,0);
+		
+		sequence_button = new Button(cp5,"SEQUENCE");
+		sequence_button.setGroup(control_group);
+		sequence_button.setSize(50,50);
+		sequence_button.setSwitch(true);
+		sequence_button.setOff();
+		sequence_button.setPosition(120,0);
+		
 		
 	}
 	private void setFourierComponentsToDTMFDigit(ArrayList<FourierComponent> a, char digit)
@@ -142,42 +213,56 @@ public class Display extends PApplet { //Using Processing 2.2.1
 			}
 			else
 			{
-				a.add(new FourierComponent(tones.get(t), .001f));
+				a.add(new FourierComponent(tones.get(t), 0.0f));
 			}
 		}
 		
 	}
 	public void setup() {
-		size(1800,1000,P2D);
+		if (is720p)
+			size(1280,720,P2D);
+		else
+			size(1920,1080,P2D);
 		//size(1800,1000);
 
 		background(255,255,255);
 		frameRate(30);
+		
+		
+		minim = new Minim(this);
+		out = minim.getLineOut();
+		for (Integer tone : tones)
+		{
+			Oscil osc = new Oscil(tone, 0.0f, Waves.SINE);
+			ugens.put(tone, osc);
+			osc.patch(out);
+		}
+		
+		
 		cp5 = new ControlP5(this);
 		overDot = false;
 		locked = false;
 		PFont pfont = createFont("Serif",60); // use true/false for smooth/no-smooth
 		font = new ControlFont(pfont,60);
+		
+		drawActionsButtons(20,50);
+		//slow_button.getCaptionLabel().setFont(font);
 
-		slow_mode = cp5.addButton("SLOW");
-		slow_mode.setPosition(0,110);
-		slow_mode.setSize(40,40);
-		slow_mode.setSwitch(true);
-		slow_mode.setOn();
-		//slow_mode.getCaptionLabel().setFont(font);
+		drawDigitButtons(200,50,"603-867-5309");
+		drawDialerButtons(850,50);
 
-		drawDigitButtons(100,50,"603-867-5309");
-
-
+		/*
+		for(Button b: digit_buttons)
+		{
+			RingBuffer rb = new RingBuffer(TRACE_LENGTH);
+			traces.add(rb);
+		}
+		*/
+		changeCurID(3);
 		
 		ellipseMode(RADIUS);
 	}
 
-	public synchronized void startSong()
-	{
-		monoSamples = song.left.toArray();
-
-	}
 	public void draw() {
 		background(black);
 		noFill();
@@ -193,9 +278,10 @@ public class Display extends PApplet { //Using Processing 2.2.1
 				b.setOn();
 			}
 		}
-		drawSuperPosition();
-		drawManipulationComponents(1300,20,10,4);
-		if(!isPaused)
+		drawSuperPosition(200,is720p ? 400 : 700);
+		drawManipulationComponents(is720p ? 900 : 1300,20,10,4);
+
+		if(play_button.getBooleanValue())
 		{
 			stepComponents();
 		}
@@ -204,8 +290,23 @@ public class Display extends PApplet { //Using Processing 2.2.1
 		textSize(32);
 		String fr_string = String.format("%.2f", frameRate);
 		text(fr_string,width-100,height-50);
+		adjustMinim();
+		if(sequence_button.getBooleanValue())
+		{
+			int ticks_since_begin = (millis() - sequence_start_time)/300;
+			if (ticks_since_begin < digit_buttons.size())
+			{
+					changeCurID(ticks_since_begin);
+			}
+			else
+			{
+				changeCurID(saved_curID);
+				sequence_button.setOff();
+				play_button.setOff();
+			}
+		}
 	}
-	void drawManipulationComponents(float startx, float starty, float scale, int columns)
+	private void drawManipulationComponents(float startx, float starty, float scale, int columns)
 	{
 		float column_spacing = scale*10;
 		float row_spacing = scale*15;
@@ -225,8 +326,8 @@ public class Display extends PApplet { //Using Processing 2.2.1
 
 			stroke(red);
 			ellipse(startx,ycirc,3,3);
-			if(mouseX > startx + radius*cos(phase) - 2*dotSize && mouseX < startx + radius*cos(phase) + 2*dotSize 
-					&& mouseY > ycirc + radius*sin(phase) - 2*dotSize && mouseY < ycirc + radius*sin(phase) + 2*dotSize  )
+			if(mouseX > startx + radius*cos(phase) - 2*DOT_SIZE && mouseX < startx + radius*cos(phase) + 2*DOT_SIZE 
+					&& mouseY > ycirc + radius*sin(phase) - 2*DOT_SIZE && mouseY < ycirc + radius*sin(phase) + 2*DOT_SIZE  )
 			{
 				stroke(white);
 				overDot = true;
@@ -235,7 +336,7 @@ public class Display extends PApplet { //Using Processing 2.2.1
 				draggedFc = afc.get(i);
 			}
 
-			ellipse(startx + radius*cos(phase),ycirc + radius*sin(phase),dotSize,dotSize);
+			ellipse(startx + radius*cos(phase),ycirc + radius*sin(phase),DOT_SIZE,DOT_SIZE);
 			fill(purple);
 			text(afc.get(i).freq + "Hz",startx,starty);
 
@@ -254,9 +355,14 @@ public class Display extends PApplet { //Using Processing 2.2.1
 	public void keyPressed()
 	{
 		if(key == ' ')
+		{			
+			if(play_button.getBooleanValue()) play_button.setOff();
+			else play_button.setOn();
+		}
+		else if (key >= '0' && key <= '9' && locked)
 		{
-			println("PAUSE TOGGLE");
-			isPaused = !isPaused;
+			draggedFc.setMag(10.0f*Character.getNumericValue(key));
+			locked = false;
 		}
 	}
 	@Override
@@ -265,6 +371,11 @@ public class Display extends PApplet { //Using Processing 2.2.1
 		if(overDot) { 
 			locked = true; 
 			println("LOCKING");
+			Button b = digit_buttons.get(curID);
+			b.getColor();
+			b.setColorActive(red);
+			b.setColorBackground(light_red);
+			b.setColorForeground(red);
 		} else {
 			locked = false;
 		}
@@ -284,12 +395,14 @@ public class Display extends PApplet { //Using Processing 2.2.1
 	public void mouseReleased() {
 		locked = false;
 	}
-	void drawSuperPosition()
+	void drawSuperPosition(float startX, float startY)
 	{
-		float fociX = 500;
-		float fociY = 500;
-		ArrayList<FourierComponent> afc = digit_fcs.get(curID);
 
+		float fociX = startX;
+		float fociY = startY;
+		ArrayList<FourierComponent> afc = digit_fcs.get(curID);
+		float realAxisHeight = is720p ?  400f : 700f;
+		float realAxisOffset = 400f;
 		for(int i = 0; i < afc.size(); i++)
 		{
 			stroke(red);
@@ -303,21 +416,46 @@ public class Display extends PApplet { //Using Processing 2.2.1
 
 			float old_fociX = fociX;
 			float old_fociY = fociY;
-			fociX += radius*cos(phase);
+			fociX += radius*cos(phase); 
 			fociY += radius*sin(phase);
 			stroke(purple);
-			if(i != afc.size() - 1)
-			{
-				line(old_fociX,old_fociY,fociX,fociY);
-			}
+			line(old_fociX,old_fociY,fociX,fociY);
+			
 		}
+		stroke(white);
+		fill(white);
+		line(startX+realAxisOffset,startY-realAxisHeight/2 ,startX+realAxisOffset,startY+realAxisHeight/2);
+		ellipse(startX+realAxisOffset,startY-realAxisHeight/2,DOT_SIZE,DOT_SIZE);
+		ellipse(startX+realAxisOffset,startY+realAxisHeight/2,DOT_SIZE,DOT_SIZE);
+		stroke(orange);
+		fill(orange);
+		ellipse(fociX,fociY,DOT_SIZE,DOT_SIZE); 
+		line(fociX,fociY,startX+realAxisOffset,fociY);
+		ellipse(startX+realAxisOffset,fociY,DOT_SIZE,DOT_SIZE);
+		
+		//RingBuffer trace = traces.get(curID);
+		if(play_button.getBooleanValue())
+		{
+		trace.push(fociY);
+		}
+	
+		float lineX = startX+realAxisOffset;
+		float lineY = fociY;
+		//line(lineX,lineY,++lineX,fociY);
+		for(int i = 0; i < trace.size(); i++)
+		{
+			float nextY = trace.get(i);
+			line(lineX,lineY,++lineX,nextY);
+			lineY = nextY;
+		}
+	
 	}
 	void stepComponents()
 	{
 		ArrayList<FourierComponent> afc = digit_fcs.get(curID);
 		for(FourierComponent fc: afc)
 		{
-			if(!slow_mode.getBooleanValue())
+			if(!slow_button.getBooleanValue())
 			{
 			fc.step(STEPS_PER_SECOND);
 			}
@@ -333,8 +471,26 @@ public class Display extends PApplet { //Using Processing 2.2.1
 
 		if (theEvent.getController().getName().matches("b[0-9]"))
 		{
-			curID = theEvent.getController().getId();
-		}		
+			changeCurID( theEvent.getController().getId());
+		}
+
+		else if (theEvent.getController().getName().matches("d[0-9]{2}"))
+		{
+			
+			CColor cc = slow_button.getColor();
+			Button b = (Button) cp5.get("b" + curID);
+			b.setColor(cc);
+			b.setLabel(theEvent.getController().getLabel());
+			ArrayList<FourierComponent> afc = digit_fcs.get(curID);
+
+			setFourierComponentsToDTMFDigit(afc,theEvent.getController().getLabel().charAt(0));
+		}
+		else if(theEvent.isFrom(sequence_button) && sequence_button.getBooleanValue())
+		{
+			play_button.setOn();
+			sequence_start_time = millis();
+			saved_curID = curID;
+		}
 
 	}
 	public static void main(String args[])
@@ -356,7 +512,8 @@ class DTMF_tone
 }
 class FourierComponent
 {
-	static float TWO_PI = (float)(2.0*Math.PI);
+	static final float MAG_MAX = 200.0f;
+	static final float TWO_PI = (float)(2.0*Math.PI);
 	protected int freq;
 	private float w_freq; //Rad/s
 	private float phase;
@@ -384,7 +541,12 @@ class FourierComponent
 
 	public void setMag(float m)
 	{
+		if(m <= MAG_MAX)
+		{
 		mag = m;
+		}
+		else
+			mag = MAG_MAX;
 	}
 	public float getMag()
 	{
@@ -403,5 +565,4 @@ class FourierComponent
 		}
 		return d;
 	}
-
 }

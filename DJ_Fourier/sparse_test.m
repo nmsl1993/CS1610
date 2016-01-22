@@ -7,7 +7,7 @@ old_pow = sum(x.^2)
 xspectrum = fft(x);
 [x_spectsort, x_spectsort_idx]  = sort(abs(xspectrum));
 
-xspectrum(x_spectsort_idx(1:end-2001)) = 0;
+xspectrum(x_spectsort_idx(1:end-10001)) = 0;
 %xspectrum(x_spectsort_idx(1000:end))=0;
 y = ifft(xspectrum);
 new_pow = sum(y.^2)
